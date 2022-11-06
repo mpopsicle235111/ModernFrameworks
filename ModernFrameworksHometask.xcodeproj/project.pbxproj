@@ -13,6 +13,7 @@
 		DB31CFEA28FCD73700A4D7BB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DB31CFE828FCD73700A4D7BB /* Main.storyboard */; };
 		DB31CFEC28FCD73D00A4D7BB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DB31CFEB28FCD73D00A4D7BB /* Assets.xcassets */; };
 		DB31CFEF28FCD73D00A4D7BB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DB31CFED28FCD73D00A4D7BB /* LaunchScreen.storyboard */; };
+		DB347BDF2910588800C990C3 /* MyPointAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB347BDE2910588800C990C3 /* MyPointAnnotation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		DB31CFEB28FCD73D00A4D7BB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DB31CFEE28FCD73D00A4D7BB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DB31CFF028FCD73D00A4D7BB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DB347BDE2910588800C990C3 /* MyPointAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPointAnnotation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +61,7 @@
 				DB31CFE228FCD73700A4D7BB /* AppDelegate.swift */,
 				DB31CFE428FCD73700A4D7BB /* SceneDelegate.swift */,
 				DB31CFE628FCD73700A4D7BB /* ViewController.swift */,
+				DB347BDE2910588800C990C3 /* MyPointAnnotation.swift */,
 				DB31CFE828FCD73700A4D7BB /* Main.storyboard */,
 				DB31CFEB28FCD73D00A4D7BB /* Assets.xcassets */,
 				DB31CFED28FCD73D00A4D7BB /* LaunchScreen.storyboard */,
@@ -139,6 +142,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DB31CFE728FCD73700A4D7BB /* ViewController.swift in Sources */,
+				DB347BDF2910588800C990C3 /* MyPointAnnotation.swift in Sources */,
 				DB31CFE328FCD73700A4D7BB /* AppDelegate.swift in Sources */,
 				DB31CFE528FCD73700A4D7BB /* SceneDelegate.swift in Sources */,
 			);
