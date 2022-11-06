@@ -16,12 +16,27 @@ class ViewController: UIViewController {
     @IBOutlet weak var locationCoordinates: UITextField!
 
     let locationManager = CLLocationManager()
+    let appleGarageCoordinates = CLLocationCoordinate2D(latitude: 37.34033264974476, longitude: -122.06892632102273)
     var userDeviceLocation: CLLocation?
+    var marker: MKPointAnnotation?
+    //CLGeocoder is a very heavy class
+    //It takes coordinates and outputs street names etc.
+    var globalGeocoder: CLGeocoder?
+    //To draw a route line
+    var routeData : MKRoute?
+    var trackedRouteCoordinates: [CLLocation] = []
+    var trackedRouteLine: MKPolylineRenderer?
+    var routeOverlay : MKOverlay?
+    var trackingOn : Bool = false
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // This is necessary to DRAW a route line between the two points, not just CALCULATE it
         mapView.delegate = self
+        //Start updating the user location (blue dot)
+        locationManager.startUpdatingLocation()
+    
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -30,6 +45,11 @@ class ViewController: UIViewController {
     
     func setupLocation(){
         locationManager.delegate = self
+        locationManager.requestWhenInUseAuthorization()
+        
+        //Included to optimize the map scope
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        
         checkAuth()
     }
     
@@ -55,9 +75,79 @@ class ViewController: UIViewController {
         }
     }
 
+    private func addMarker() {
+        marker = MKPointAnnotation()
+        marker?.coordinate = appleGarageCoordinates
+        marker?.title = "Apple Garage"
+        marker?.subtitle = "Where Apple Was Born"
+        mapView.addAnnotation(marker!)
+    }
+    
+    private func removeMarker() {
+        mapView.removeAnnotation(marker!)
+        marker = nil //We also have to delete the marker object itself
+    }
+    
+    private func drawRoute(routeData: [CLLocation]) {
+        
+        if routeData.count == 0 {
+                    print("No coordinates to draw a line")
+                    return
+                }
+                let trackedCoordinates = trackedRouteCoordinates.map { location -> CLLocationCoordinate2D in
+                    return location.coordinate
+                }
+                
+                DispatchQueue.main.async {
+                    self.routeOverlay = MKPolyline(coordinates: trackedCoordinates, count: trackedCoordinates.count)
+                    self.mapView.addOverlay(self.routeOverlay!, level: .aboveRoads)
+                    let customEdgePadding : UIEdgeInsets = UIEdgeInsets (
+                        top: 10,
+                        left: 10,
+                        bottom: 10,
+                        right: 10
+                    )
+                    self.mapView.setVisibleMapRect(self.routeOverlay!.boundingMapRect, edgePadding: customEdgePadding, animated: true)
+                }
+    }
+    
+   
+    @IBAction func addMarkerDidTap(_ sender: Any) {
+        //Was before:
+        //addMarker()
+        //Now we check, if the marker exists already.
+        //If there is no marker - we add a new marker
+        //If it already exists - we delete it
+        if marker == nil {
+            mapView.setCenter(appleGarageCoordinates, animated: true)//Center map on the new marker
+            addMarker()
+        } else {
+           removeMarker()
+        }
+    }
+    
+    
+    @IBAction func startTrackingDidTap(_ sender: UIButton) {
+        if trackingOn == false {
+            trackingOn = true
+            print("Started tracking")
+            mapView.setCenter(userDeviceLocation?.coordinate ?? appleGarageCoordinates, animated: true)
+            //locationManager.requestLocation()
+            //guard let location = locations.first else { return }
+            //self.userDeviceLocation = location
+            //trackedRouteCoordinates.append(location)
+            drawRoute(routeData: trackedRouteCoordinates)
+        } else {
+           trackingOn = false
+           print("Finished tracking")
+        }
+       
+    }
+    
+    
+    
     //We type in a location and the new pin is set for it
     //There can be as many pins as we want
-    
     @IBAction func searchButton(_ sender: Any) {
         if locationCoordinates.text?.count != 0{
             searchInMap(locationCoordinates: locationCoordinates.text!) { endPointLocation in
@@ -145,7 +235,7 @@ class ViewController: UIViewController {
         pin.coordinate = location.coordinate
         
         //Span is a magnification rate
-        self.mapView.setRegion(MKCoordinateRegion(center: location.coordinate, span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5)), animated: true)
+        self.mapView.setRegion(MKCoordinateRegion(center: location.coordinate, span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)), animated: true)
         
         self.mapView.addAnnotation(pin)
     }
@@ -159,14 +249,26 @@ extension ViewController: CLLocationManagerDelegate {
     //Focus the map on our location
     //Otherwise we just see the whole global map and have to search
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
+        //This is how we show user location (blue dot) on mapView
+        let span = MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+        let region = MKCoordinateRegion(center: locations[0].coordinate, span: span)
+        
+        mapView.setRegion(region, animated: true)
+        mapView.showsUserLocation = true
+        
+        mapView.delegate = self
+        
         guard let location = locations.first else { return }
         self.userDeviceLocation = location
         
-        setPin(location: location)
+        //setPin(location: location)
         
         print("Map updated") //By default the map updates every second
         //This is not necessary here, so we
-        locationManager.stopUpdatingLocation()
+        //locationManager.stopUpdatingLocation()
+        print(location.coordinate)
+        trackedRouteCoordinates.append(location)
     }
     
     /// Works every time we change location - maybe we do not have a permission any more?
@@ -180,9 +282,94 @@ extension ViewController: MKMapViewDelegate {
     //In our case we're going to draw a route
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         let render = MKPolylineRenderer(overlay: overlay as! MKPolyline)
-        //Set line color
+        //Set line color and width
+        render.lineWidth = 5
+        render.strokeColor = .systemBlue
         render.strokeColor = .red
         return render
+    }
+    
+    
+    //Three funcs below show nice custom pins, using the MyPointAnnotation Class.
+    //Source: https://stackoverflow.com/questions/55273097/mapkit-get-current-coordinates-of-placemarker
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+            guard !(annotation is MKUserLocation) else {
+                return nil
+            }
+
+            let reuseId = "pin"
+            var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
+            if pinView == nil {
+                pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
+                pinView?.pinTintColor = UIColor.red
+                pinView?.canShowCallout = true
+            }
+            else {
+                pinView?.annotation = annotation
+            }
+            return pinView
+        }
+
+//        func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+//            if view.annotation is MyPointAnnotation {
+//                if let selectedAnnotation = view.annotation as? MyPointAnnotation {
+//                    if let id = selectedAnnotation.identifier {
+//                        for pin in mapView.annotations as! [MyPointAnnotation] {
+//                            if let myIdentifier = pin.identifier {
+//                                if myIdentifier == id {
+//                                    print(pin.lat ?? 0.0)
+//                                    print(pin.lon ?? 0.0)
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+
+//        func addNewAnnotationPin(title: String, subTitle: String, lat: Double, lon: Double) {
+//            let myPin = MyPointAnnotation()
+//            myPin.coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
+//            myPin.title = title
+//            myPin.subtitle = subTitle
+//            myPin.identifier = UUID().uuidString
+//            myPin.lat = lat
+//            myPin.lon = lon
+//            self.mapView.addAnnotation(myPin)
+//        }
+    
+    //Looks like this is a standard MapKit func to get tap coordinates on map
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+
+        for touch in touches {
+            let touchPoint = touch.location(in: mapView)
+            let location = mapView.convert(touchPoint, toCoordinateFrom: mapView)
+            print ("\(location.latitude), \(location.longitude)")
+            
+            //Place markers in the touched places
+            //We can save them in some array or CoreDdata
+            let manualMarker = MKPointAnnotation(__coordinate: location)
+            //Add to center map on each new marker
+            //mapView.setCenter(location, animated: true)
+            mapView.addAnnotation(manualMarker)
+            
+            //These lines add street names, ets. to the coordinates
+            //Was before:
+            //globalGeocoder = CLGeocoder()
+            //Because the class CLGeoCoder is extremely heavy,
+            //it's best to inset check:
+            if globalGeocoder == nil {
+                globalGeocoder = CLGeocoder()
+            }
+            
+            globalGeocoder?.reverseGeocodeLocation(CLLocation(latitude: location.latitude, longitude: location.longitude),
+                completionHandler: { places, error in
+                print(places?.last)
+                
+            })
+        }
+    
     }
 }
 
