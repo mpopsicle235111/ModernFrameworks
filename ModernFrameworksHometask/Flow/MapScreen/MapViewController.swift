@@ -9,7 +9,7 @@
 import UIKit
 import MapKit
 
-class ViewController: UIViewController {
+class MapViewController: UIViewController {
 
     @IBOutlet weak var mapView: MKMapView!
 
@@ -28,6 +28,8 @@ class ViewController: UIViewController {
     var trackedRouteLine: MKPolylineRenderer?
     var routeOverlay : MKOverlay?
     var trackingOn : Bool = false
+    //Added for Navigation Coordinator
+    var viewModel: MapViewModel?
     
     
     override func viewDidLoad() {
@@ -144,6 +146,11 @@ class ViewController: UIViewController {
        
     }
     
+    //Added for Navigation Coordinator
+    
+    @IBAction func didTapLogout(_ sender: UIButton) {
+        viewModel?.logout()
+    }
     
     
     //We type in a location and the new pin is set for it
@@ -244,7 +251,7 @@ class ViewController: UIViewController {
 
 //Here we check, if tracking is allowed by the user
 //This method is performed each time the location changes
-extension ViewController: CLLocationManagerDelegate {
+extension MapViewController: CLLocationManagerDelegate {
     
     //Focus the map on our location
     //Otherwise we just see the whole global map and have to search
@@ -277,7 +284,7 @@ extension ViewController: CLLocationManagerDelegate {
     }
 }
 
-extension ViewController: MKMapViewDelegate {
+extension MapViewController: MKMapViewDelegate {
     //This method is used to draw something on the map
     //In our case we're going to draw a route
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
