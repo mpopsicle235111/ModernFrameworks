@@ -18,7 +18,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MAP TRACKER" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FcM-jc-9ty">
-                                <rect key="frame" x="30" y="314" width="354" height="50"/>
+                                <rect key="frame" x="30" y="214" width="354" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="e3y-QC-lD4"/>
                                 </constraints>
@@ -27,7 +27,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mappin" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Uas-OT-qQy">
-                                <rect key="frame" x="80" y="243.5" width="254" height="60"/>
+                                <rect key="frame" x="80" y="143.5" width="254" height="60"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="60" id="ubS-lk-Y3w"/>
                                 </constraints>
@@ -37,7 +37,7 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Uas-OT-qQy" secondAttribute="trailing" constant="80" id="BX7-P3-pMk"/>
-                            <constraint firstItem="Uas-OT-qQy" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="200" id="D99-Il-wvD"/>
+                            <constraint firstItem="Uas-OT-qQy" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="100" id="D99-Il-wvD"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="FcM-jc-9ty" secondAttribute="trailing" constant="30" id="N1B-GS-XdW"/>
                             <constraint firstItem="FcM-jc-9ty" firstAttribute="top" secondItem="Uas-OT-qQy" secondAttribute="bottom" constant="10" id="VIA-9W-KKG"/>
                             <constraint firstItem="Uas-OT-qQy" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="80" id="gFY-fG-Wgz"/>

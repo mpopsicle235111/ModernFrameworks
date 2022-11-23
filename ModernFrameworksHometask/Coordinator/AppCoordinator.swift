@@ -34,6 +34,10 @@ class AppCoordinator: Coordinator {
         instantiateLoginViewController()
     }
     
+    func goToSignUpScreen() {
+        instantiateSignUpViewController()
+    }
+    
     private func instantiateLoginViewController() {
         //Let's check if we have a loginViewController
         guard let loginViewController = storyBoard.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController else {
@@ -45,6 +49,19 @@ class AppCoordinator: Coordinator {
         loginViewModel.appCoordinator = self
         loginViewController.viewModel = loginViewModel
         navigation.pushViewController(loginViewController, animated: true)
+    }
+    
+    private func instantiateSignUpViewController() {
+        //Let's check if we have a signUpViewController
+        guard let signUpViewController = storyBoard.instantiateViewController(withIdentifier: "SignUpViewController") as? SignUpViewController else {
+            return
+        }
+        //If we have created a SignUpViewController succesfully,
+        //let's create a SignUpViewModel
+        let signUpViewModel = SignUpViewModel()
+        signUpViewModel.appCoordinator = self
+        signUpViewController.viewModel = signUpViewModel
+        navigation.pushViewController(signUpViewController, animated: true)
     }
     
     func goToMapPage() {
