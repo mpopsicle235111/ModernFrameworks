@@ -6,10 +6,24 @@
 //
 
 import UIKit
+import CoreData
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    //Added to use the CoreData
+    lazy var persistentContainer: NSPersistentContainer = {
+
+        let container = NSPersistentContainer(name: "MapTrackerLoginStorage")
+        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+            if let error = error {
+
+                fatalError("Unresolved error, \((error as NSError).userInfo)")
+            }
+        })
+        return container
+    }()
+    
     //Added to use the Coordinator
     var window: UIWindow?
     var appCoordinator: AppCoordinator?

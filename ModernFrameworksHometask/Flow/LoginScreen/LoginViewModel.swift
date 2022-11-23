@@ -13,4 +13,8 @@ class LoginViewModel {
     func goToMapScreen() {
         appCoordinator?.goToMapPage()
     }
+    
+    func goToSignUpScreen() {
+        appCoordinator?.goToSignUpScreen()
+    }
 }

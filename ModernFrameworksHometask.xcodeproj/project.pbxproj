@@ -12,6 +12,11 @@
 		DB04884E291C43740083D859 /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB04884D291C43740083D859 /* MapViewModel.swift */; };
 		DB048851291C43A00083D859 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB048850291C43A00083D859 /* Coordinator.swift */; };
 		DB048853291C43B00083D859 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB048852291C43B00083D859 /* AppCoordinator.swift */; };
+		DB1D69C9292A9C8F00D81D82 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB1D69C8292A9C8F00D81D82 /* SignUpViewController.swift */; };
+		DB1D69CB292A9CA000D81D82 /* SignUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB1D69CA292A9CA000D81D82 /* SignUpViewModel.swift */; };
+		DB306B0F292ACBB70074D2E8 /* MapTrackerLoginStorage.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DB306B0D292ACBB70074D2E8 /* MapTrackerLoginStorage.xcdatamodeld */; };
+		DB306B12292ACC5E0074D2E8 /* LoginDetails+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB306B10292ACC5E0074D2E8 /* LoginDetails+CoreDataClass.swift */; };
+		DB306B13292ACC5E0074D2E8 /* LoginDetails+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB306B11292ACC5E0074D2E8 /* LoginDetails+CoreDataProperties.swift */; };
 		DB31CFE328FCD73700A4D7BB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB31CFE228FCD73700A4D7BB /* AppDelegate.swift */; };
 		DB31CFE728FCD73700A4D7BB /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB31CFE628FCD73700A4D7BB /* MapViewController.swift */; };
 		DB31CFEA28FCD73700A4D7BB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DB31CFE828FCD73700A4D7BB /* Main.storyboard */; };
@@ -26,6 +31,11 @@
 		DB04884D291C43740083D859 /* MapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
 		DB048850291C43A00083D859 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		DB048852291C43B00083D859 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
+		DB1D69C8292A9C8F00D81D82 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
+		DB1D69CA292A9CA000D81D82 /* SignUpViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewModel.swift; sourceTree = "<group>"; };
+		DB306B0E292ACBB70074D2E8 /* MapTrackerLoginStorage.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MapTrackerLoginStorage.xcdatamodel; sourceTree = "<group>"; };
+		DB306B10292ACC5E0074D2E8 /* LoginDetails+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoginDetails+CoreDataClass.swift"; sourceTree = "<group>"; };
+		DB306B11292ACC5E0074D2E8 /* LoginDetails+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoginDetails+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		DB31CFDF28FCD73700A4D7BB /* ModernFrameworksHometask.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ModernFrameworksHometask.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB31CFE228FCD73700A4D7BB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DB31CFE628FCD73700A4D7BB /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
@@ -50,6 +60,7 @@
 		DB048846291C42C30083D859 /* Flow */ = {
 			isa = PBXGroup;
 			children = (
+				DB1D69C7292A9C6700D81D82 /* SignUpScreen */,
 				DB048847291C42D30083D859 /* LoginScreen */,
 				DB04884C291C43180083D859 /* MapScreen */,
 			);
@@ -83,6 +94,25 @@
 			path = Coordinator;
 			sourceTree = "<group>";
 		};
+		DB1D69C7292A9C6700D81D82 /* SignUpScreen */ = {
+			isa = PBXGroup;
+			children = (
+				DB1D69C8292A9C8F00D81D82 /* SignUpViewController.swift */,
+				DB1D69CA292A9CA000D81D82 /* SignUpViewModel.swift */,
+			);
+			path = SignUpScreen;
+			sourceTree = "<group>";
+		};
+		DB306B0C292ACB890074D2E8 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				DB306B11292ACC5E0074D2E8 /* LoginDetails+CoreDataProperties.swift */,
+				DB306B10292ACC5E0074D2E8 /* LoginDetails+CoreDataClass.swift */,
+				DB306B0D292ACBB70074D2E8 /* MapTrackerLoginStorage.xcdatamodeld */,
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
 		DB31CFD628FCD73700A4D7BB = {
 			isa = PBXGroup;
 			children = (
@@ -105,6 +135,7 @@
 				DB048846291C42C30083D859 /* Flow */,
 				DB04884F291C43880083D859 /* Coordinator */,
 				DB31CFE228FCD73700A4D7BB /* AppDelegate.swift */,
+				DB306B0C292ACB890074D2E8 /* CoreData */,
 				DB347BDE2910588800C990C3 /* MyPointAnnotation.swift */,
 				DB31CFE828FCD73700A4D7BB /* Main.storyboard */,
 				DB31CFEB28FCD73D00A4D7BB /* Assets.xcassets */,
@@ -187,10 +218,15 @@
 			files = (
 				DB048851291C43A00083D859 /* Coordinator.swift in Sources */,
 				DB31CFE728FCD73700A4D7BB /* MapViewController.swift in Sources */,
+				DB306B0F292ACBB70074D2E8 /* MapTrackerLoginStorage.xcdatamodeld in Sources */,
+				DB1D69CB292A9CA000D81D82 /* SignUpViewModel.swift in Sources */,
 				DB347BDF2910588800C990C3 /* MyPointAnnotation.swift in Sources */,
 				DB04884B291C43080083D859 /* LoginViewModel.swift in Sources */,
 				DB31CFE328FCD73700A4D7BB /* AppDelegate.swift in Sources */,
+				DB306B13292ACC5E0074D2E8 /* LoginDetails+CoreDataProperties.swift in Sources */,
 				DB04884E291C43740083D859 /* MapViewModel.swift in Sources */,
+				DB306B12292ACC5E0074D2E8 /* LoginDetails+CoreDataClass.swift in Sources */,
+				DB1D69C9292A9C8F00D81D82 /* SignUpViewController.swift in Sources */,
 				DB048853291C43B00083D859 /* AppCoordinator.swift in Sources */,
 				DB048849291C42F90083D859 /* LoginViewController.swift in Sources */,
 			);
@@ -408,6 +444,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		DB306B0D292ACBB70074D2E8 /* MapTrackerLoginStorage.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				DB306B0E292ACBB70074D2E8 /* MapTrackerLoginStorage.xcdatamodel */,
+			);
+			currentVersion = DB306B0E292ACBB70074D2E8 /* MapTrackerLoginStorage.xcdatamodel */;
+			path = MapTrackerLoginStorage.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = DB31CFD728FCD73700A4D7BB /* Project object */;
 }
