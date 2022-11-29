@@ -235,6 +235,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="loginButton" destination="ryM-4B-YvW" id="tZZ-pd-iOL"/>
                         <outlet property="loginInput" destination="8Tk-xl-ut7" id="cvC-YI-e3M"/>
                         <outlet property="passwordInput" destination="ZhD-Vu-UIn" id="0F1-bS-7Z2"/>
                         <outlet property="scrollView" destination="gpH-WY-31i" id="Ksl-ze-j9W"/>

@@ -10,12 +10,23 @@
 import UIKit
 import CoreData
 import CommonCrypto
+import RxSwift
+import RxCocoa
 
 class LoginViewController: UIViewController {
     
     @IBOutlet weak var loginInput: UITextField!
     @IBOutlet weak var passwordInput: UITextField!
     @IBOutlet weak var scrollView: UIScrollView!
+    //In RX version we add a button Outlet, so we can change the button's color
+    //This is no Action outlet! Action outlet is below.
+    @IBOutlet weak var loginButton: UIButton!
+    //We also add a DisposeBag in RX version:
+    private let disposeBag = DisposeBag()
+    //These are default values for PublishSubject - we need these, because
+    //LoginViewModel - and our viewModel - is Optional
+    var loginInputText = PublishSubject<String>()
+    var passwordInputText = PublishSubject<String>()
     
     //Added for navigation
     var viewModel: LoginViewModel?
@@ -57,6 +68,19 @@ class LoginViewController: UIViewController {
         let hideKeyboardGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         //Assign the gesture to UIScrollView
         scrollView?.addGestureRecognizer(hideKeyboardGesture)
+        
+        //Added for RX login
+        //Let's allow for the loginTextField to see the keyboard straight away
+        loginInput.becomeFirstResponder()
+        //Let's map the strings to non-optional and bind it to LoginViewModel
+        loginInput.rx.text.map { $0 ?? "" }.bind(to: viewModel?.loginInputTextPublishSubject ?? loginInputText).disposed(by: disposeBag)
+        passwordInput.rx.text.map { $0 ?? "" }.bind(to: viewModel?.passwordInputTextPublishSubject ?? passwordInputText).disposed(by: disposeBag)
+        //Then we bind our valid observable to a loginButton
+        viewModel?.isValid().bind(to: loginButton.rx.isEnabled).disposed(by: disposeBag)
+        //And we also bind in to alpha (color saturation) property:
+        //is isv`alid, then Opacity = 1, if not valid, then opacity is 0.9Admin
+        viewModel?.isValid().map { $0 ? 1 : 0.9 }.bind(to: loginButton.rx.alpha).disposed(by: disposeBag)
+        
     }
     
     //Added for CoreData
@@ -210,6 +234,8 @@ class LoginViewController: UIViewController {
       */
     
 }
+
+
 
 ///This method is added to enable sha1 encryption
 extension String {
