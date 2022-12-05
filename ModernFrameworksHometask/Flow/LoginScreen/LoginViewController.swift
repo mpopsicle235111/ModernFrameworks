@@ -144,6 +144,7 @@ class LoginViewController: UIViewController {
         
         if loginInput.text == "" || passwordInput.text == ""
             {
+                
                 let alert = UIAlertController(title: "ERROR", message: "Please fill in both login and password", preferredStyle: .alert)
 
                 let ok = UIAlertAction(title: "OK", style: .default, handler: nil)
@@ -210,7 +211,8 @@ class LoginViewController: UIViewController {
         }
 
     }
-        
+    
+    
         
      /* OLD PASSWORD CHECK SECTION
         if login == "Admin" && password == "1234" {

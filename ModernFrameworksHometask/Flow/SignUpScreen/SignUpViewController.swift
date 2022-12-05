@@ -77,35 +77,28 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         
     }
     
+    func presentAlert(alertTitle: String, alertMessage: String) {
+        let alert = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: .alert)
+
+        let ok = UIAlertAction(title: "OK", style: .default, handler: nil)
+        let cancel = UIAlertAction(title: "CANCEL", style: .default, handler: nil)
+
+        alert.addAction(ok)
+        alert.addAction(cancel)
+
+        self.present(alert, animated: true, completion: nil)
+    }
+    
     
     @IBAction func register(_ sender: UIButton) {
         if userLogin.text == "" || userPassword.text == "" || userPasswordRetyped.text == ""
         {
-            let alert = UIAlertController(title: "Information", message: "Please fill in all the fields", preferredStyle: .alert)
-
-            let ok = UIAlertAction(title: "OK", style: .default, handler: nil)
-            let cancel = UIAlertAction(title: "CANCEL", style: .default, handler: nil)
-
-            alert.addAction(ok)
-            alert.addAction(cancel)
-
-            self.present(alert, animated: true, completion: nil)
-
+            presentAlert(alertTitle: "Information", alertMessage: "Please fill in all the fields")
         }
 
         else if (userPassword.text != userPasswordRetyped.text)
         {
-            let alert = UIAlertController(title: "Information", message: "Your password does not match", preferredStyle: .alert
-            )
-
-            let ok = UIAlertAction(title: "OK", style: .default, handler: nil)
-            let cancel = UIAlertAction(title: "CANCEL", style: .default, handler: nil)
-
-            alert.addAction(ok)
-            alert.addAction(cancel)
-
-            self.present(alert, animated: true, completion: nil)
-
+            presentAlert(alertTitle: "Information", alertMessage: "Your password does not match")
         }
 
         else
