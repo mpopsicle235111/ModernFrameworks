@@ -38,8 +38,79 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.rootViewController = navigationController //Define root controller
         window?.makeKeyAndVisible() //A command to show root controller
         
+        //Added for local push notifications
+        let center = UNUserNotificationCenter.current()
+        center.delegate = self
+        requestPermissionForPushMessages(center: center)
+        
         return true
     }
+    
+    //Added for local push notifications
+    func requestPermissionForPushMessages(center: UNUserNotificationCenter) {
+        let center = UNUserNotificationCenter.current() //Singleton detected!
+        //Badge is a little red dot with a number of notifications
+        //Permission can be granted, can not be granted, and there can be an error
+        center.requestAuthorization(options: [.alert, .badge, .sound]) { [weak self] granted, error in
+            guard granted else {
+                print("WARNING: user permission is not granted!")
+                return
+            }
+            //Guard here so we do not have to unwrap content and trigger below
+            guard let self = self else { return }
+                
+            //If all is OK (user granted us them rights), we send the notification
+            //with specified content, triggered by the specified trigger
+            let content = self.createPushMessageContent()
+            let trigger = self.createPushMessageTrigger()
+                
+            self.sendNotificationRequest(content: content, trigger: trigger)
+        }
+    }
+    
+    
+    //Added for local push notifications
+    func createPushMessageContent() -> UNNotificationContent {
+        let content = UNMutableNotificationContent()
+        content.title = "Knock, knock, Neo."
+        content.subtitle = "We have our eye on you."
+        content.body = "Please, activate the Map Tracker. Do we make ourselves clear?"
+            
+        //The above will already work. However, we can add a badge (counter)
+        //This is a number in the red circle
+        content.badge = 101
+            
+        //The information and data is inserted into the Notification here.
+        //For example, if we need to notify of a chat message, the sender info
+        //will be embedded here. Also we have to know, which screen to open
+        //if the user decides to perform some action based upon the notification -
+        //this info should be here, too.
+        //It is a dictionary [key : data]
+        content.userInfo = ["message": "Listen to me, coppertop. Right now there is only one rule. Our way or the highway."]
+            
+        return content
+    }
+    
+    
+    //Added for local push notifications
+    func createPushMessageTrigger() -> UNNotificationTrigger {
+        //Triggers in 30 minutes (1800 seconds), not repeating
+        //Since Swift 4.2 one-string funcs do not require a return:
+        UNTimeIntervalNotificationTrigger(timeInterval: 1800, repeats: false)
+    }
+    
+    
+    //Added for local push notifications
+    func sendNotificationRequest(content: UNNotificationContent, trigger: UNNotificationTrigger) {
+            let request = UNNotificationRequest(identifier: "timeNotification", content: content, trigger: trigger)
+            let center = UNUserNotificationCenter.current()
+            center.add(request) { error in
+                if let error = error {
+                    print(error.localizedDescription)
+                }
+            }
+            
+        }
 
     // MARK: UISceneSession Lifecycle
         // MARK: These are deleted because we deleted the SceneDelegate file AND ALSO THE REFERENCE TO IT IN info.plist
@@ -56,5 +127,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //    }
 
 
+}
+
+//Added for local push notifications
+//If we receive a responce (tap) from the user, we perform the following actions:
+extension AppDelegate: UNUserNotificationCenterDelegate {
+   func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
+       
+        print("How about I just give you the finger, and you give me my phone call?")
+       
+        let title = response.notification.request.content.title
+        let userInfo = response.notification.request.content.userInfo
+        print(title)
+   
+        //If the message exists, we print it
+        if let message = userInfo["message"] as? String {
+            print("message: \(message)")
+        }
+       //Similarly we can use a Coordinator to navigate to the necessary View from here
+    }
 }
 
