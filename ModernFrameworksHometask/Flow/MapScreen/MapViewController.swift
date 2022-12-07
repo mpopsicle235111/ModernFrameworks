@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  MapViewController.swift
 //  ModernFrameworksHometask
 //
 //  Created by Anton Lebedev on 17.10.2022.
@@ -10,27 +10,33 @@ import UIKit
 import MapKit
 
 class MapViewController: UIViewController {
-
+    
     @IBOutlet weak var mapView: MKMapView!
-
+    
     @IBOutlet weak var locationCoordinates: UITextField!
-
+    
+    //We need these to get the avatar from PhotoLibrary
+    @IBOutlet weak var userImageView: UIImageView!
+    var imageFromPickerController = UIImagePickerController()
+    
     let locationManager = CLLocationManager()
     let appleGarageCoordinates = CLLocationCoordinate2D(latitude: 37.34033264974476, longitude: -122.06892632102273)
     var userDeviceLocation: CLLocation?
     var marker: MKPointAnnotation?
+    
     //CLGeocoder is a very heavy class
     //It takes coordinates and outputs street names etc.
     var globalGeocoder: CLGeocoder?
+    
     //To draw a route line
     var routeData : MKRoute?
     var trackedRouteCoordinates: [CLLocation] = []
     var trackedRouteLine: MKPolylineRenderer?
     var routeOverlay : MKOverlay?
     var trackingOn : Bool = false
+    
     //Added for Navigation Coordinator
     var viewModel: MapViewModel?
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,11 +44,14 @@ class MapViewController: UIViewController {
         mapView.delegate = self
         //Start updating the user location (blue dot)
         locationManager.startUpdatingLocation()
-    
     }
     
     override func viewWillAppear(_ animated: Bool) {
         setupLocation()
+        
+        //Set a border around user's avatar
+        userImageView.layer.borderColor = UIColor(red: 0, green: 0.4588, blue: 0.9176, alpha: 1).cgColor
+        userImageView.layer.borderWidth = 2
     }
     
     func setupLocation(){
@@ -58,7 +67,7 @@ class MapViewController: UIViewController {
     //Checks, if user authorizes us to track him/her
     func checkAuth(){
         switch locationManager.authorizationStatus{
-            
+        
         case .notDetermined:  //default
             //This popup is defined in Info.plist
             //Privacy - Location When In Use Usage Description
@@ -76,7 +85,7 @@ class MapViewController: UIViewController {
             print("Unknown Error")
         }
     }
-
+    
     private func addMarker() {
         marker = MKPointAnnotation()
         marker?.coordinate = appleGarageCoordinates
@@ -93,27 +102,27 @@ class MapViewController: UIViewController {
     private func drawRoute(routeData: [CLLocation]) {
         
         if routeData.count == 0 {
-                    print("No coordinates to draw a line")
-                    return
-                }
-                let trackedCoordinates = trackedRouteCoordinates.map { location -> CLLocationCoordinate2D in
-                    return location.coordinate
-                }
-                
-                DispatchQueue.main.async {
-                    self.routeOverlay = MKPolyline(coordinates: trackedCoordinates, count: trackedCoordinates.count)
-                    self.mapView.addOverlay(self.routeOverlay!, level: .aboveRoads)
-                    let customEdgePadding : UIEdgeInsets = UIEdgeInsets (
-                        top: 10,
-                        left: 10,
-                        bottom: 10,
-                        right: 10
-                    )
-                    self.mapView.setVisibleMapRect(self.routeOverlay!.boundingMapRect, edgePadding: customEdgePadding, animated: true)
-                }
+            print("No coordinates to draw a line")
+            return
+        }
+        let trackedCoordinates = trackedRouteCoordinates.map { location -> CLLocationCoordinate2D in
+            return location.coordinate
+        }
+        
+        DispatchQueue.main.async {
+            self.routeOverlay = MKPolyline(coordinates: trackedCoordinates, count: trackedCoordinates.count)
+            self.mapView.addOverlay(self.routeOverlay!, level: .aboveRoads)
+            let customEdgePadding : UIEdgeInsets = UIEdgeInsets (
+                top: 10,
+                left: 10,
+                bottom: 10,
+                right: 10
+            )
+            self.mapView.setVisibleMapRect(self.routeOverlay!.boundingMapRect, edgePadding: customEdgePadding, animated: true)
+        }
     }
     
-   
+    
     @IBAction func addMarkerDidTap(_ sender: Any) {
         //Was before:
         //addMarker()
@@ -124,12 +133,13 @@ class MapViewController: UIViewController {
             mapView.setCenter(appleGarageCoordinates, animated: true)//Center map on the new marker
             addMarker()
         } else {
-           removeMarker()
+            removeMarker()
         }
     }
     
     
     @IBAction func startTrackingDidTap(_ sender: UIButton) {
+        
         if trackingOn == false {
             trackingOn = true
             print("Started tracking")
@@ -140,16 +150,34 @@ class MapViewController: UIViewController {
             //trackedRouteCoordinates.append(location)
             drawRoute(routeData: trackedRouteCoordinates)
         } else {
-           trackingOn = false
-           print("Finished tracking")
+            trackingOn = false
+            print("Finished tracking")
         }
-       
+        
     }
     
     //Added for Navigation Coordinator
-    
     @IBAction func didTapLogout(_ sender: UIButton) {
         viewModel?.logout()
+    }
+    
+    //Allows user to take a selfie and save it as tracking avatar
+    @IBAction func didTapSelfie(_ sender: UIButton) {
+        print("Selfie button works")
+        //We can guard-check, if the device has a camera - but we know we don't have it and use PhotoLibrary instead
+        //guard UIImagePickerController.isSourceTypeAvailable(.camera) else { return }
+        
+        let imageFromPickerController = UIImagePickerController()
+        imageFromPickerController.delegate = self
+        //Set image source
+        //We need a developer account to use the real device - otherwise we have no camera
+        //imagePickerController.sourceType = .camera
+        imageFromPickerController.sourceType = .photoLibrary
+        //Do not allow user to edit the image
+        imageFromPickerController.allowsEditing = false
+        
+        //Present controller
+        self.present(imageFromPickerController, animated: true)
     }
     
     
@@ -164,16 +192,12 @@ class MapViewController: UIViewController {
                 
                 //let geoCoder = CLGeocoder()
                 //geoCoder.reverseGeocodeLocation(endPointLocation, completionHandler: { places, error in
-                    //print(places?.last)
-                    
-                    
+                //print(places?.last)
                 //})
                 
                 //This func receives userDeviceLocation and endPoint
                 //And builds a route between them
                 self.setRoute(start: self.userDeviceLocation!.coordinate, end: endPointLocation.coordinate)
-                
-                
             }
         }
     }
@@ -284,6 +308,33 @@ extension MapViewController: CLLocationManagerDelegate {
     }
 }
 
+//We use this extension to resize the User's avatar image on tracking point
+extension UIImage {
+    func resized(to size: CGSize) -> UIImage {
+        return UIGraphicsImageRenderer(size: size).image { _ in
+            draw(in: CGRect(origin: .zero, size: size))
+        }
+    }
+}
+
+//Allows user to take a selfie and save it as tracking avatar
+extension MapViewController: UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+    
+    //This method allows user to dismiss the controller by "Cancel" button
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true) }
+    
+    //Receive the image from camera - initial destination is "info" storage dictionary
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+        let imageFromPickerController = info[.originalImage] as? UIImage
+        
+        userImageView.image = imageFromPickerController
+        
+        self.dismiss(animated: true, completion: nil)
+    }
+}
+
+
 extension MapViewController: MKMapViewDelegate {
     //This method is used to draw something on the map
     //In our case we're going to draw a route
@@ -291,7 +342,7 @@ extension MapViewController: MKMapViewDelegate {
         let render = MKPolylineRenderer(overlay: overlay as! MKPolyline)
         //Set line color and width
         render.lineWidth = 5
-        render.strokeColor = .systemBlue
+        //render.strokeColor = .systemBlue
         render.strokeColor = .red
         return render
     }
@@ -301,54 +352,66 @@ extension MapViewController: MKMapViewDelegate {
     //Source: https://stackoverflow.com/questions/55273097/mapkit-get-current-coordinates-of-placemarker
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-            guard !(annotation is MKUserLocation) else {
-                return nil
-            }
-
-            let reuseId = "pin"
-            var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
-            if pinView == nil {
-                pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
-                pinView?.pinTintColor = UIColor.red
-                pinView?.canShowCallout = true
-            }
-            else {
-                pinView?.annotation = annotation
-            }
-            return pinView
+        //If it IS NOT the user's location, then we show custom avatar
+        guard !(annotation is MKUserLocation) else {
+            return nil
+        }
+        
+        let identifier = "User"
+        
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
+        
+        if annotationView == nil{
+            annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+            annotationView!.canShowCallout = true
+            
+        } else {
+            annotationView!.annotation = annotation
         }
 
-//        func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-//            if view.annotation is MyPointAnnotation {
-//                if let selectedAnnotation = view.annotation as? MyPointAnnotation {
-//                    if let id = selectedAnnotation.identifier {
-//                        for pin in mapView.annotations as! [MyPointAnnotation] {
-//                            if let myIdentifier = pin.identifier {
-//                                if myIdentifier == id {
-//                                    print(pin.lat ?? 0.0)
-//                                    print(pin.lon ?? 0.0)
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-
-//        func addNewAnnotationPin(title: String, subTitle: String, lat: Double, lon: Double) {
-//            let myPin = MyPointAnnotation()
-//            myPin.coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
-//            myPin.title = title
-//            myPin.subtitle = subTitle
-//            myPin.identifier = UUID().uuidString
-//            myPin.lat = lat
-//            myPin.lon = lon
-//            self.mapView.addAnnotation(myPin)
-//        }
+        //Create a nice circular view on top of the pin
+        let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 16, height: 16))
+        imageView.image = userImageView.image?.resized(to: CGSize(width: 16, height: 16))
+        imageView.layer.cornerRadius = imageView.layer.frame.size.width / 2
+        imageView.layer.masksToBounds = true
+        annotationView?.addSubview(imageView)
+        
+        
+        return annotationView
+        
+    }
+    
+    //        func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+    //            if view.annotation is MyPointAnnotation {
+    //                if let selectedAnnotation = view.annotation as? MyPointAnnotation {
+    //                    if let id = selectedAnnotation.identifier {
+    //                        for pin in mapView.annotations as! [MyPointAnnotation] {
+    //                            if let myIdentifier = pin.identifier {
+    //                                if myIdentifier == id {
+    //                                    print(pin.lat ?? 0.0)
+    //                                    print(pin.lon ?? 0.0)
+    //                                }
+    //                            }
+    //                        }
+    //                    }
+    //                }
+    //            }
+    //        }
+    
+    //        func addNewAnnotationPin(title: String, subTitle: String, lat: Double, lon: Double) {
+    //            let myPin = MyPointAnnotation()
+    //            myPin.coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
+    //            myPin.title = title
+    //            myPin.subtitle = subTitle
+    //            myPin.identifier = UUID().uuidString
+    //            myPin.lat = lat
+    //            myPin.lon = lon
+    //            self.mapView.addAnnotation(myPin)
+    //        }
     
     //Looks like this is a standard MapKit func to get tap coordinates on map
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-
+        
         for touch in touches {
             let touchPoint = touch.location(in: mapView)
             let location = mapView.convert(touchPoint, toCoordinateFrom: mapView)
@@ -365,18 +428,17 @@ extension MapViewController: MKMapViewDelegate {
             //Was before:
             //globalGeocoder = CLGeocoder()
             //Because the class CLGeoCoder is extremely heavy,
-            //it's best to inset check:
+            //it's best to insert check:
             if globalGeocoder == nil {
                 globalGeocoder = CLGeocoder()
             }
             
             globalGeocoder?.reverseGeocodeLocation(CLLocation(latitude: location.latitude, longitude: location.longitude),
-                completionHandler: { places, error in
-                print(places?.last)
-                
-            })
+                                                   completionHandler: { places, error in
+                                                    print(places?.last)
+                                                    
+                                                   })
         }
-    
+        
     }
 }
-

@@ -172,7 +172,11 @@ class LoginViewController: UIViewController {
 
         let predicate = NSPredicate(format: "userLogin = %@", username)
         
-
+        
+        //Wipe the textFields clean for the next attempt
+        clearTextField(textField: loginInput)
+        clearTextField(textField: passwordInput)
+        
         fetchrequest.predicate = predicate
         do
         {
@@ -210,6 +214,11 @@ class LoginViewController: UIViewController {
             print("error", fetch_error.localizedDescription)
         }
 
+    }
+    
+    //Clean up the login and password textfiela after a failed attempt
+    func clearTextField(textField: UITextField) {
+        textField.text = ""
     }
     
     

@@ -55,7 +55,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         scrollView?.addGestureRecognizer(hideKeyboardGesture)
     }
     
-    //In viewWillAppear we subscribe to the messages from keboard.
+    //In viewWillAppear we subscribe to the messages from keyboard.
     //The keyboard issues these messages in the notification centre.
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
