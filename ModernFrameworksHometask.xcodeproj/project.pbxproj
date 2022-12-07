@@ -140,13 +140,21 @@
 				DB04884F291C43880083D859 /* Coordinator */,
 				DB31CFE228FCD73700A4D7BB /* AppDelegate.swift */,
 				DB306B0C292ACB890074D2E8 /* CoreData */,
-				DB347BDE2910588800C990C3 /* MyPointAnnotation.swift */,
+				DB9ECB872940D0700071631A /* Pin Models */,
 				DB31CFE828FCD73700A4D7BB /* Main.storyboard */,
 				DB31CFEB28FCD73D00A4D7BB /* Assets.xcassets */,
 				DB31CFED28FCD73D00A4D7BB /* LaunchScreen.storyboard */,
 				DB31CFF028FCD73D00A4D7BB /* Info.plist */,
 			);
 			path = ModernFrameworksHometask;
+			sourceTree = "<group>";
+		};
+		DB9ECB872940D0700071631A /* Pin Models */ = {
+			isa = PBXGroup;
+			children = (
+				DB347BDE2910588800C990C3 /* MyPointAnnotation.swift */,
+			);
+			path = "Pin Models";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -386,6 +394,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ModernFrameworksHometask/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -393,6 +402,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.7;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -413,6 +423,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ModernFrameworksHometask/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -420,6 +431,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.7;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

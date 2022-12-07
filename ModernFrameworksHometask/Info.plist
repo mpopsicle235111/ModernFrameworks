@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Please, alllow us to take a photo from the device&apos;s library as your new avatar</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Please, allow us to use the camera to make your selfie for the tracking avatar</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Please, kindly allow this app to track your location...</string>
 </dict>

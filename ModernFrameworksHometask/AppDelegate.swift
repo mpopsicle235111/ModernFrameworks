@@ -130,7 +130,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 }
 
 //Added for local push notifications
-//If we receive a responce (tap) from the user, we perform the following actions:
+//If we receive a response (tap) from the user, we perform the following actions:
 extension AppDelegate: UNUserNotificationCenterDelegate {
    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
        
